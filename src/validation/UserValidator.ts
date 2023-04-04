@@ -1,4 +1,6 @@
 import Joi from "joi";
+import UserInterface from "../interfaces/UserInterface";
+import addressSchema from "../models/Address";
 
 namespace UserValidator{
 
@@ -10,8 +12,45 @@ namespace UserValidator{
 
   const cpf_validator = (value : string, helper : Joi.CustomHelpers) =>{
     // TODO:
-
+    return value;
   }
+
+  const addressValidation = Joi.object({
+    cep: Joi.number()
+    .required()
+    .messages({
+
+    }),
+
+    patio: Joi.string()
+    .required()
+    .messages({
+
+    }),
+
+    complement: Joi.string()
+    .messages({
+
+    }),
+
+    neighborhood: Joi.string()
+    .required()
+    .messages({
+
+    }),
+
+    locality: Joi.string()
+    .required()
+    .messages({
+
+    }),
+
+    uf: Joi.string()
+    .required()
+    .messages({
+      
+    })
+  });
 
   const userValidation = Joi.object({
 
@@ -66,13 +105,14 @@ namespace UserValidator{
     .messages({
       "boolean.base" : 'The qualified entry must be a boolean or a "yes"/"no" string.',
       "boolean.required" : "A user must inform if he is qualified to drive."
-    })
-  })
+    }),
 
-  const addressValidation = Joi.object({
-    // TODO:
-  })
+    address: addressValidation
+  });
 
+  export const validate = async (user : UserInterface) => {
+    return await userValidation.validateAsync(user);
+  }
 }
 
 export default UserValidator;
