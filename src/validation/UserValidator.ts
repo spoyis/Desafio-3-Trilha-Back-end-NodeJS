@@ -5,6 +5,9 @@ namespace UserValidator{
   const NAME_LOWER_BOUND = 3;
   const NAME_UPPER_BOUND = 30;
 
+  const PASSWORD_LOWER_BOUND = 5;
+  const PASSWORD_UPPER_BOUND = 64;
+
   const cpf_validator = (value : string, helper : Joi.CustomHelpers) =>{
     // TODO:
 
@@ -19,8 +22,8 @@ namespace UserValidator{
     .messages({
       "string.base": "The user's name should be a type of text.",
       "string.required": "A user must have a name.",
-      "string.min": `The given user name nust have a minimum of ${NAME_LOWER_BOUND} characters.`,
-      "string.max": `The given user name nust have a maximum of ${NAME_UPPER_BOUND} characters.`
+      "string.min": `The given user name must have a minimum of ${NAME_LOWER_BOUND} characters.`,
+      "string.max": `The given user name must have a maximum of ${NAME_UPPER_BOUND} characters.`
     }),
 
     cpf: Joi.string()
@@ -49,9 +52,13 @@ namespace UserValidator{
 
     password: Joi.string()
     .required()
+    .min(PASSWORD_LOWER_BOUND)
+    .max(PASSWORD_UPPER_BOUND)
     .messages({
       "string.base": "The given password should be a type of text.",
-      "string.required": "A user must have a password."
+      "string.required": "A user must have a password.",
+      "string.min": `The given password must have a minimum of ${PASSWORD_LOWER_BOUND} characters.`,
+      "string.max": `The given password must have a maximum of ${PASSWORD_UPPER_BOUND} characters.`
     }),
 
     qualified: Joi.boolean()
