@@ -14,15 +14,16 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     return this._model.create(item);
   }
 
-
   async update(id: string, item: T){
     const options : QueryOptions<Document<T>> = {runValidators : true, new: true}
     console.log(item)
-    return this._model.updateOne({_id: id}, item, options);
+    return this._model.updateOne({_id: id}, item as any, options);
   }
+  
   async delete(filter : FilterQuery<HydratedDocument<T>>){
     return this._model.deleteMany(filter);
   }
+
   async find(propertyName : string, item: any , selectFilter? : string) {
     const object = {[propertyName] : item};
     if(selectFilter)
@@ -30,6 +31,7 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     else
       return this._model.find(object as FilterQuery<T>);
   }
+
   async findOne(propertyName : string, item: any , selectFilter? : string)  {
     const object = {[propertyName] : item};
     
