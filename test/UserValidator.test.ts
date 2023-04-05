@@ -27,12 +27,27 @@ describe('UserValidator test suite', () =>{
 
   beforeEach(()=>{
     user = {...validUser};
-  })
+  });
 
   it('Should return the user object, if the given inputs are valid', async ()=>{
     const result = await UserValidator.validate(user);
 
     expect(result).toEqual(user);
-  })
+  });
+
+  describe('Should return an error if any of the required inputs are missing', () =>{
+    it.each([
+      {input:'name'},
+      {input:'cpf'},
+      {input:'birthDate'},
+      {input:'email'},
+      {input:'password'},
+      {input:'address'},
+      {input:'qualified'}
+    ])(' - $input is missing',  async ({input})=>{
+      (user as any)[input] = undefined;
+      await expect(UserValidator.validate(user)).rejects.toThrow()
+    });
+  });
 
 })
