@@ -19,36 +19,37 @@ namespace UserValidator{
     cep: Joi.number()
     .required()
     .messages({
-
+      "number.base" : "The user's cep should be a type of number.",
+      "number.required" : "The user needs a cep number."
     }),
 
     patio: Joi.string()
-    .required()
     .messages({
-
+      "string.base" : "The user's address patio should be a type of text.",
     }),
 
     complement: Joi.string()
     .messages({
-
+      "string.base" : "The user's address complement should be a type of text.",
     }),
 
     neighborhood: Joi.string()
-    .required()
     .messages({
-
+      "string.base" : "The user's neighborhood should be a type of text."
     }),
 
     locality: Joi.string()
     .required()
     .messages({
-
+      "string.base" : "The user's locality should be a type of text.",
+      "string.required" : "The user's address needs a locality."
     }),
 
     uf: Joi.string()
     .required()
     .messages({
-      
+      "string.base" : "The user's uf should be a type of text.",
+      "string.required" : "The user's address needs a UF (Unidade Federativa)."
     })
   });
 
