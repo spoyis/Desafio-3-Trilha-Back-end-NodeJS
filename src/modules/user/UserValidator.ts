@@ -1,6 +1,6 @@
 import Joi from "joi";
-import UserInterface from "../interfaces/UserInterface";
-import addressSchema from "../models/Address";
+import UserInterface from "./UserInterface";
+import addressSchema from "./AddressSchema";
 
 namespace UserValidator{
 

@@ -1,6 +1,6 @@
-import AddressInterface from "../src/interfaces/AddressInterface"
-import UserInterface from "../src/interfaces/UserInterface"
-import UserValidator from "../src/validation/UserValidator"
+import AddressInterface from "../modules/user/AddressInterface"
+import UserInterface from "../modules/user/UserInterface"
+import UserValidator from "../modules/user/UserValidator"
 
 describe('UserValidator test suite', () =>{
 

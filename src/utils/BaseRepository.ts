@@ -1,5 +1,5 @@
-import IWrite from '../interfaces/IWrite';
-import IRead from '../interfaces/IRead';
+import IWrite from './IWrite';
+import IRead from './IRead';
 
 import {Model, Document, HydratedDocument, QueryWithHelpers, FilterQuery, QueryOptions, UpdateQuery} from 'mongoose';
 

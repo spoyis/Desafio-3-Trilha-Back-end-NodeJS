@@ -3,7 +3,7 @@ dotenv.config({ path: './config.env' });
 
 import express from 'express';
 import { connect } from "mongoose";
-import BaseRoutes from  './routes/BaseRoutes';
+import BaseRoutes from  './utils/BaseRoutes';
 
 const app = express();
 

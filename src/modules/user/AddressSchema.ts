@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import AddressInterface from '../interfaces/AddressInterface';
+import AddressInterface from './AddressInterface';
 
 const addressSchema = new Schema<AddressInterface>({
   cep:{
