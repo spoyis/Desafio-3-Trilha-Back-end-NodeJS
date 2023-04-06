@@ -54,7 +54,6 @@ namespace UserController{
     const user = await repo.findOne('email', email, 'password');
     
     if(!user) return next(new AppError('User not found!', 404))
-    console.log(user)
     
     const flag = await AuthController.comparePassword(user, password)
     if(flag) return next(new AppError('Invalid email/password combo', 401))

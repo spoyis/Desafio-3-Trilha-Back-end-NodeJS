@@ -11,8 +11,6 @@ namespace ErrorController{
   };
 
   export const globalErrorHandler = async (err : any, req: Request, res: Response, next: NextFunction) =>{
-
-      console.log('here')
       err.statusCode = err.statusCode || 500;
       err.status = err.status || 'fail';
 
