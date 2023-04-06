@@ -53,12 +53,12 @@ namespace UserController{
 
     const user = await repo.findOne('email', email, 'password');
     
-    if(!user) return next(new AppError('User not found!', 404))
+    if(!user) return next(new AppError('User not found!', 404));
     
-    const flag = await AuthController.comparePassword(user, password)
-    if(flag) return next(new AppError('Invalid email/password combo', 401))
+    const flag = await AuthController.comparePassword(user, password);
+    if(!flag) return next(new AppError('Invalid email/password combo', 401))
 
-    const token = await AuthController.signToken(user._id)
+    const token = await AuthController.signToken(user._id);
 
     MakeResponse.success(res, 200, "User successfully logged in", {"token" : token});
   }

@@ -17,8 +17,7 @@ namespace AuthController{
   };
 
   export const comparePassword = async (user : HydratedDocument<UserInterface>, candidatePassword : string) => {
-    const token = await signToken(candidatePassword);
-    return await bcrypt.compare(token, user.password);
+    return await bcrypt.compare(candidatePassword, user.password);
   }
 
   export const protectRoute = async (req: Request, res: Response, next : NextFunction) => {
