@@ -7,11 +7,18 @@ namespace UserValidator{
   const NAME_LOWER_BOUND = 3;
   const NAME_UPPER_BOUND = 30;
 
-  const PASSWORD_LOWER_BOUND = 5;
+  const PASSWORD_LOWER_BOUND = 6;
   const PASSWORD_UPPER_BOUND = 64;
+
+  function extractCPFDigits(CPF: string) : Array<number> {
+    const digits = CPF.replace(/\D/g, '');
+    return digits.split('').map(digit => Number(digit));
+  }
 
   const cpf_validator = (value : string, helper : Joi.CustomHelpers) =>{
     // TODO:
+    const digits = extractCPFDigits(value);
+    console.log(digits)
     return value;
   }
 
