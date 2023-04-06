@@ -52,7 +52,7 @@ namespace UserController{
     if(!email || !password)
       return next(new AppError('Please provide email/password!', 400));
 
-    const user = await repo.findOne('email', email, 'password');
+    const user = await repo.findOne({email} , 'password');
     
     if(!user) return next(new AppError('User not found!', 404));
     

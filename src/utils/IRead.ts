@@ -1,6 +1,6 @@
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, FilterQuery } from "mongoose";
 
 export default interface IRead<T> {
-  find(propertyName : string, item: any , selectFilter? : string): any;
-  findOne(propertyName : string, item: any , selectFilter? : string) : any ;
+  find(filter : FilterQuery<HydratedDocument<T>> , selectFilter? : string): any;
+  findOne(filter : FilterQuery<HydratedDocument<T>> , selectFilter? : string) : any ;
 }
