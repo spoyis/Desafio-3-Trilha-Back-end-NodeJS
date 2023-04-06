@@ -8,10 +8,14 @@ import ErrorController from '../../errors/ErrorController';
 import axios, { AxiosResponse } from 'axios';
 import AppError from '../../errors/AppError';
 import AddressInterface from './AddressInterface';
-import { HydratedDocument, FilterQuery } from 'mongoose';
+import { HydratedDocument, FilterQuery, QueryOptions } from 'mongoose';
 
 const repo = new UserRepository();
 namespace UserController{
+
+  const PAGE_SIZE = 5;
+  const NO_FILTER = {};
+  const NO_OPTIONS = {};
 
   // AUXILIARY FUNCTIONS
   async function getAddressByCep(cep: string): Promise<AddressInterface> {
@@ -28,8 +32,17 @@ namespace UserController{
     return address;
   }
 
+  // endpoint middleware functions
   export const GET = async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
-    // TODO:
+    let queryOptions: QueryOptions<HydratedDocument<UserInterface>> = {"limit": PAGE_SIZE};
+    const queryFilter : FilterQuery<HydratedDocument<UserInterface>> = req.params.id ? {"_id" : req.params.id} :  {}
+
+    const pageIndex = +req.body.pageIndex || 0;
+    queryOptions.skip = pageIndex * PAGE_SIZE;
+
+    let users = await repo.find(queryFilter, queryOptions, "-password");
+
+    MakeResponse.success(res, 200, `retrieved ${users.length} user(s) at page ${pageIndex}`, users);
   }
 
   export const signUp =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
@@ -52,7 +65,7 @@ namespace UserController{
     if(!email || !password)
       return next(new AppError('Please provide email/password!', 400));
 
-    const user = await repo.findOne({email} , 'password');
+    const user = await repo.findOne({email} , NO_OPTIONS ,'password');
     
     if(!user) return next(new AppError('User not found!', 404));
     

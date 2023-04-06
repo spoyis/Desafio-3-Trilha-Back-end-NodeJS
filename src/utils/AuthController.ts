@@ -28,7 +28,7 @@ namespace AuthController{
     const token = req.headers.authorization.split(" ")[1];
 
     const validation : any = await jwt.verify(token, secret);
-    const selectedUser = await userRepo.findOne({_id: validation.id});
+    const selectedUser = await userRepo.findOne({_id: validation.id}, {});
 
     if(!selectedUser)
       next( new AppError('Validation failed, user not found or does not exist', 400) );

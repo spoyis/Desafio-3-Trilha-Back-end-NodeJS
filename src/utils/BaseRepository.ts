@@ -24,18 +24,18 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     return this._model.deleteMany(filter);
   }
 
-  async find(filter : FilterQuery<HydratedDocument<T>> , selectFilter? : string) {
+  async find(filter : FilterQuery<HydratedDocument<T>>, options : QueryOptions<HydratedDocument<T>> , selectFilter? : string) {
     if(selectFilter)
-      return this._model.find(filter).select(selectFilter);
+      return this._model.find(filter, {}, options).select(selectFilter);
     else
-      return this._model.find(filter);
+      return this._model.find(filter, {}, options);
   }
 
-  async findOne(filter : FilterQuery<HydratedDocument<T>> , selectFilter? : string)  {
+  async findOne(filter : FilterQuery<HydratedDocument<T>> , options : QueryOptions<HydratedDocument<T>>, selectFilter? : string)  {
     
     if(selectFilter)
-      return this._model.findOne(filter).select(selectFilter);
+      return this._model.findOne(filter, {}, options).select(selectFilter);
     else
-      return this._model.findOne(filter);
+      return this._model.findOne(filter, {}, options);
   }
 }
