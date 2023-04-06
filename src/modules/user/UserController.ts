@@ -8,6 +8,7 @@ import ErrorController from '../../errors/ErrorController';
 import axios, { AxiosResponse } from 'axios';
 import AppError from '../../errors/AppError';
 import AddressInterface from './AddressInterface';
+import { HydratedDocument, FilterQuery } from 'mongoose';
 
 const repo = new UserRepository();
 namespace UserController{
@@ -64,7 +65,10 @@ namespace UserController{
   }
 
   export const DELETE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
-    // TODO:
+    let deleteParams: FilterQuery<HydratedDocument<UserInterface>>  = {_id : req.body.validatedUser.id};
+    
+    await repo.delete(deleteParams);
+    MakeResponse.success(res, 204, "User successfully deleted");
   }
 
   export const UPDATE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
