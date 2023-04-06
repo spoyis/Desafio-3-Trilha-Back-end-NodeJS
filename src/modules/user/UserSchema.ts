@@ -8,13 +8,15 @@ const userSchema = new Schema<UserInterface>({
     type: String
   },
   cpf:{
-    type: String
+    type: String,
+    unique: true
   },
   birthDate:{
     type: Date
   },
   email:{
-    type: String
+    type: String,
+    unique: true
   },
   password:{
     type: String
