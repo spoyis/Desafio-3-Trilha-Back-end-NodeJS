@@ -42,7 +42,7 @@ namespace UserController{
     const userDoc = await repo.create(userData);
     const token = await AuthController.signToken(userDoc._id);
 
-    MakeResponse.success(res, 201, "User successfully created" , token);
+    MakeResponse.success(res, 201, "User successfully created" , {"token": token});
   });
 
   export const signIn = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
