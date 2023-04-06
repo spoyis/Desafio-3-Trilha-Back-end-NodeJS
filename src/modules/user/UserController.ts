@@ -5,19 +5,40 @@ import UserInterface from './UserInterface';
 import AuthController from '../../utils/AuthController';
 import MakeResponse from '../../utils/MakeResponse';
 import ErrorController from '../../errors/ErrorController';
+import axios, { AxiosResponse } from 'axios';
 import AppError from '../../errors/AppError';
+import AddressInterface from './AddressInterface';
 
 const repo = new UserRepository();
 namespace UserController{
+
+  // AUXILIARY FUNCTIONS
+  async function getAddressByCep(cep: string): Promise<AddressInterface> {
+    console.log(cep)
+    const response: AxiosResponse<any> = await axios.get(`https://viacep.com.br/ws/${cep}/json`);
+
+    const address : AddressInterface = {
+      cep: +cep,
+      patio: response.data.logradouro,
+      complement : response.data.complement,
+      neighborhood: response.data.bairro,
+      locality: response.data.localidade,
+      uf: response.data.uf,
+    }
+    return address;
+  }
 
   export const GET = async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     // TODO:
   }
 
   export const signUp =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
-    // TODO: get cep data
-    const userData = await UserValidator.validate(req.body);
-    console.log(userData)
+    const addr = await getAddressByCep(req.body.cep);
+
+    let {cep , ...userData} = req.body;
+    userData.address = addr;
+
+    await UserValidator.validate(userData);
 
     const userDoc = await repo.create(userData);
     const token = await AuthController.signToken(userDoc._id);
