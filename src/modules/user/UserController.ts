@@ -14,7 +14,6 @@ namespace UserController{
 
   // AUXILIARY FUNCTIONS
   async function getAddressByCep(cep: string): Promise<AddressInterface> {
-    console.log(cep)
     const response: AxiosResponse<any> = await axios.get(`https://viacep.com.br/ws/${cep}/json`);
 
     const address : AddressInterface = {
