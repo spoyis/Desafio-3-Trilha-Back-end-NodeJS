@@ -30,21 +30,32 @@ namespace CarController{
   export const POST =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     const car = await CarValidator.validatePOST(req.body);
 
-    const carDoc = await repo.create(car);
+    await repo.create(car);
 
     MakeResponse.success(res, 201, "Car succesfully registered" , car);
   });
 
-  export const DELETE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
+  export const DELETE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     let deleteParams: FilterQuery<HydratedDocument<CarInterface>>  = {_id : req.params.id};
+    
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) // invalid mongoose ObjectId
+      next(new AppError("No car found with the given ID" , 404))
     
     await repo.delete(deleteParams);
     MakeResponse.success(res, 204, "Car successfully deleted");
-  }
+  })
 
-  export const UPDATE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
-    // TODO:
-  }
+  export const UPDATE =  ErrorController.catchAsync( async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
+    const car = await CarValidator.validateUPDATE(req.body);
+
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) // invalid mongoose ObjectId
+      next(new AppError("No car found with the given ID" , 404))
+    
+    const update = await repo.update(req.params.id, car);
+    if(update.matchedCount === 0) next(new AppError("No car found with the given ID" , 404))
+
+    MakeResponse.success(res, 201, "Car succesfully updated" , car);
+  })
 
   export const PATCH = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     // TODO:

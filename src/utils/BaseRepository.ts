@@ -15,9 +15,7 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
 
   async update(id: string, item: T){
-    const options : QueryOptions<Document<T>> = {runValidators : true, new: true}
-    console.log(item)
-    return this._model.updateOne({_id: id}, item as any, options);
+    return this._model.updateOne({_id: id}, item as any);
   }
   
   async delete(filter : FilterQuery<HydratedDocument<T>>){
