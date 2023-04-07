@@ -16,7 +16,11 @@ namespace CarController{
   }
 
   export const POST =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
-    // TODO:
+    const car = await CarValidator.validate(req.body);
+
+    const carDoc = await repo.create(car);
+
+    MakeResponse.success(res, 201, "Car succesfully registered" , car);
   });
 
   export const DELETE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
