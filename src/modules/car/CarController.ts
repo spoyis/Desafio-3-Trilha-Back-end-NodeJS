@@ -6,7 +6,6 @@ import MakeResponse from '../../utils/MakeResponse';
 import ErrorController from '../../errors/ErrorController';
 import AppError from '../../errors/AppError';
 import { HydratedDocument, FilterQuery, QueryOptions } from 'mongoose';
-import { string } from 'joi';
 
 const repo = new CarRepository();
 
