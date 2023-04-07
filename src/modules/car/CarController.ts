@@ -22,7 +22,6 @@ namespace CarController{
     if(queryFilter.accessories)
       queryFilter.accessories =  {$elemMatch: {description: queryFilter.accessories}};
 
-    console.log(queryFilter)
     const pageIndex = +req.body.pageIndex || 0;
     queryOptions.skip = pageIndex * PAGE_SIZE;
 
@@ -74,7 +73,6 @@ namespace CarController{
       accessories = [...accessories.slice(0, index), ...accessories.slice(index + 1)];
     }
     
-    console.log(accessories)
     await repo.update(req.params.id, {accessories} as any);
 
     MakeResponse.success(res, 200, "Car accessories succesfully updated" , accessories);
