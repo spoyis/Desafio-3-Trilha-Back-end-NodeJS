@@ -11,8 +11,20 @@ const repo = new CarRepository();
 
 namespace CarController{
 
+  const PAGE_SIZE = 5;
+  const NO_FILTER = {};
+  const NO_OPTIONS = {};
+
   export const GET = async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
-    // TODO:
+    let queryOptions: QueryOptions<HydratedDocument<CarInterface>> = {"limit": PAGE_SIZE};
+    const queryFilter : FilterQuery<HydratedDocument<CarInterface>> = req.params.id ? {"_id" : req.params.id, ...req.query} :  { ...req.query}
+
+    const pageIndex = +req.body.pageIndex || 0;
+    queryOptions.skip = pageIndex * PAGE_SIZE;
+
+    let cars = await repo.find(queryFilter, queryOptions);
+
+    MakeResponse.success(res, 200, `retrieved ${cars.length} car(s) at page ${pageIndex}`, cars);
   }
 
   export const POST =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
