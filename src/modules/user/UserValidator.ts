@@ -16,10 +16,25 @@ namespace UserValidator{
   }
 
   const cpf_validator = (value : string, helper : Joi.CustomHelpers) =>{
-    // TODO:
     const digits = extractCPFDigits(value);
-    console.log(digits)
-    return value;
+    if (digits.length !== 11) {
+      return helper.error("cpf.invalid");
+    }
+
+    const weights1 = [10, 9, 8, 7, 6, 5, 4, 3, 2];
+    const weights2 = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+
+    const dv1 = weights1.reduce((acc, weight, index) => {
+      return acc + digits[index] * weight;
+    }, 0) % 11;
+
+    const dv2 = weights2.reduce((acc, weight, index) => {
+      return acc + digits[index] * weight;
+    }, 0) % 11;
+
+    const isValid = digits[9] === (dv1 < 2 ? 0 : 11 - dv1) && digits[10] === (dv2 < 2 ? 0 : 11 - dv2);
+
+    return isValid ? value : helper.error("cpf.invalid");
   }
 
   const addressValidation = Joi.object({
