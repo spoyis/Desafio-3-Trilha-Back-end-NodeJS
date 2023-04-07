@@ -48,7 +48,7 @@ namespace CarController{
     const update = await repo.update(req.params.id, car);
     if(update.matchedCount === 0) next(new AppError("No object found with the given ID" , 404))
 
-    MakeResponse.success(res, 201, "Car succesfully updated" , car);
+    MakeResponse.success(res, 200, "Car succesfully updated" , car);
   })
 
   export const PATCH = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
