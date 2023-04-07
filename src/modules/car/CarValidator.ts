@@ -51,6 +51,10 @@ namespace CarValidator{
 
     })
   })
+
+  export const validate = async (car : CarInterface) => {
+    return await CarValidation.validateAsync(car);
+  }
 }
 
 export default CarValidator;
