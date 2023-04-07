@@ -14,7 +14,7 @@ const carSchema = new Schema<CarInterface>({
   value_per_day:{
     type: Number,
   },
-  accessories: [String],
+  accessories: [{"description" : String}],
   number_of_passengers:{
     type: Number
   }

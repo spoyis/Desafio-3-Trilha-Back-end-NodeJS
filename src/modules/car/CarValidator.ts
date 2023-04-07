@@ -37,7 +37,12 @@ namespace CarValidator{
     }),
 
     accessories: Joi.array()
-    .items(Joi.string())
+    .items(
+      Joi.object({
+        description: Joi.string()
+        .required()
+        .messages({"string.required" : "an accessory needs a description"})
+      }))
     .unique()
     .required()
     .min(ACCESSORIES_LOWER_BOUND)
