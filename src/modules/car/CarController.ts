@@ -28,7 +28,7 @@ namespace CarController{
   }
 
   export const POST =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
-    const car = await CarValidator.validate(req.body);
+    const car = await CarValidator.validatePOST(req.body);
 
     const carDoc = await repo.create(car);
 

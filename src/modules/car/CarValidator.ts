@@ -11,13 +11,11 @@ namespace CarValidator{
   const CarValidation = Joi.object({
 
     model: Joi.string()
-    .required()
     .messages({
 
     }),
 
     color: Joi.string()
-    .required()
     .messages({
 
     }),
@@ -25,13 +23,11 @@ namespace CarValidator{
     year: Joi.number()
     .min(FABRICATION_LOWER_BOUND)
     .max(FABRICATION_UPPER_BOUND)
-    .required()
     .messages({
 
     }),
 
     value_per_day: Joi.number()
-    .required()
     .messages({
 
     }),
@@ -40,24 +36,26 @@ namespace CarValidator{
     .items(
       Joi.object({
         description: Joi.string()
-        .required()
+  
         .messages({"string.required" : "an accessory needs a description"})
       }))
     .unique()
-    .required()
     .min(ACCESSORIES_LOWER_BOUND)
     .messages({
 
     }),
 
     number_of_passengers: Joi.number()
-    .required()
     .messages({
 
     })
   })
 
-  export const validate = async (car : CarInterface) => {
+  export const validatePOST = async (car : CarInterface) => {
+    return await CarValidation.options({ presence: 'required' }).required().validateAsync(car);
+  }
+
+  export const validateUPDATE = async (car : CarInterface) => {
     return await CarValidation.validateAsync(car);
   }
 }
