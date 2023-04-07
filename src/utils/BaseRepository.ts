@@ -1,5 +1,6 @@
 import IWrite from './IWrite';
 import IRead from './IRead';
+import AppError from '../errors/AppError';
 
 import {Model, Document, HydratedDocument, QueryWithHelpers, FilterQuery, QueryOptions, UpdateQuery} from 'mongoose';
 
@@ -15,10 +16,17 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
 
   async update(id: string, item: T){
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) 
+      throw new AppError("No object found with the given ID" , 404);
+
     return this._model.updateOne({_id: id}, item as any);
   }
   
   async delete(filter : FilterQuery<HydratedDocument<T>>){
+    if(filter._id)
+      if (!filter._id.match(/^[0-9a-fA-F]{24}$/))
+        throw new AppError("No object found with the given ID" , 404);
+
     return this._model.deleteMany(filter);
   }
 

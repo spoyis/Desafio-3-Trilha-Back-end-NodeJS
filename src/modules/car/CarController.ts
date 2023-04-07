@@ -38,9 +38,6 @@ namespace CarController{
   export const DELETE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     let deleteParams: FilterQuery<HydratedDocument<CarInterface>>  = {_id : req.params.id};
     
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) // invalid mongoose ObjectId
-      next(new AppError("No car found with the given ID" , 404))
-    
     await repo.delete(deleteParams);
     MakeResponse.success(res, 204, "Car successfully deleted");
   })
@@ -48,11 +45,8 @@ namespace CarController{
   export const UPDATE =  ErrorController.catchAsync( async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     const car = await CarValidator.validateUPDATE(req.body);
 
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) // invalid mongoose ObjectId
-      next(new AppError("No car found with the given ID" , 404))
-    
     const update = await repo.update(req.params.id, car);
-    if(update.matchedCount === 0) next(new AppError("No car found with the given ID" , 404))
+    if(update.matchedCount === 0) next(new AppError("No object found with the given ID" , 404))
 
     MakeResponse.success(res, 201, "Car succesfully updated" , car);
   })
