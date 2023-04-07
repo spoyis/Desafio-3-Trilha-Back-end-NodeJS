@@ -21,7 +21,7 @@ namespace AuthController{
   }
 
   export const protectRoute = async (req: Request, res: Response, next : NextFunction) => {
-    req.body.validatedUser = null;
+    (req as any).user = null;
     if(!req.headers.authorization)
       return next( new AppError('You need to be logged in to access this route', 401) );
 
@@ -33,7 +33,7 @@ namespace AuthController{
     if(!selectedUser)
       next( new AppError('Validation failed, user not found or does not exist', 400) );
   
-    req.body.validatedUser = selectedUser;
+    (req as any).user = selectedUser;
     return next();
   }
 }

@@ -78,7 +78,7 @@ namespace UserController{
   }
 
   export const DELETE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
-    let deleteParams: FilterQuery<HydratedDocument<UserInterface>>  = {_id : req.body.validatedUser.id};
+    let deleteParams: FilterQuery<HydratedDocument<UserInterface>>  = {_id : (req as any).user.id};
     
     await repo.delete(deleteParams);
     MakeResponse.success(res, 204, "User successfully deleted");
