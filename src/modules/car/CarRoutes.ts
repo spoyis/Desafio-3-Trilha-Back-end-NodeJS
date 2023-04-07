@@ -11,9 +11,9 @@ router.post('/', CarController.POST);
 router.get('/', CarController.GET);
 router.get('/:id', CarController.GET);
 
-router.delete('/', CarController.DELETE);
+router.delete('/:id', CarController.DELETE);
 
-router.put('/', CarController.UPDATE);
+router.put('/:id', CarController.UPDATE);
 
 router.patch('/', CarController.PATCH);
 

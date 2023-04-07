@@ -36,7 +36,10 @@ namespace CarController{
   });
 
   export const DELETE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
-    // TODO:
+    let deleteParams: FilterQuery<HydratedDocument<CarInterface>>  = {_id : req.params.id};
+    
+    await repo.delete(deleteParams);
+    MakeResponse.success(res, 204, "Car successfully deleted");
   }
 
   export const UPDATE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
