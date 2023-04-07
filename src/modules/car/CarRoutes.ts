@@ -15,6 +15,6 @@ router.delete('/:id', CarController.DELETE);
 
 router.put('/:id', CarController.UPDATE);
 
-router.patch('/', CarController.PATCH);
+router.patch('/:id/accessories/:id', CarController.PATCH);
 
 export default router;

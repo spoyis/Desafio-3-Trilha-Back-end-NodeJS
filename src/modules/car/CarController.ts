@@ -6,6 +6,7 @@ import MakeResponse from '../../utils/MakeResponse';
 import ErrorController from '../../errors/ErrorController';
 import AppError from '../../errors/AppError';
 import { HydratedDocument, FilterQuery, QueryOptions } from 'mongoose';
+import { string } from 'joi';
 
 const repo = new CarRepository();
 
@@ -19,6 +20,10 @@ namespace CarController{
     let queryOptions: QueryOptions<HydratedDocument<CarInterface>> = {"limit": PAGE_SIZE};
     const queryFilter : FilterQuery<HydratedDocument<CarInterface>> = req.params.id ? {"_id" : req.params.id, ...req.query} :  { ...req.query}
 
+    if(queryFilter.accessories)
+      queryFilter.accessories =  {$elemMatch: {description: queryFilter.accessories}};
+
+    console.log(queryFilter)
     const pageIndex = +req.body.pageIndex || 0;
     queryOptions.skip = pageIndex * PAGE_SIZE;
 
@@ -52,7 +57,28 @@ namespace CarController{
   })
 
   export const PATCH = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
-    // TODO:
+    const queryFilter : FilterQuery<HydratedDocument<CarInterface>> = {"_id" : req.params.id};
+
+    const {description} = req.body;
+
+    if(typeof description !== "string" ) 
+      next(new AppError("please provide a valid description string", 400));
+
+    let car = await repo.findOne(queryFilter, NO_OPTIONS);
+    let accessories = car!.accessories;
+
+    const index = accessories.findIndex(accessory => accessory.description.includes(description));
+    if(index === -1){
+      accessories.push({description});
+    }
+    else{
+      accessories = [...accessories.slice(0, index), ...accessories.slice(index + 1)];
+    }
+    
+    console.log(accessories)
+    await repo.update(req.params.id, {accessories} as any);
+
+    MakeResponse.success(res, 200, "Car accessories succesfully updated" , accessories);
   }
 }
 
