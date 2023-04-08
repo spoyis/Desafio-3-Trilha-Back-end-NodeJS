@@ -39,10 +39,7 @@ namespace ReserveController{
     req.body.final_value = calculateTotalCost(car!.value_per_day, req.body.start_date, req.body.end_date);
     req.body.id_user = (req as any).user.id ;
 
-    const reserve = await ReserveValidator.validatePOST(req.body);
-    await ReserveValidator.checkTimeframeIntersection(req.body.start_date, req.body.end_date, carQuery._id, car.model)
-    
-    // TODO: DISALLOW A USER TO RESERVE MORE THAN ONE CAR
+    const reserve = await ReserveValidator.validatePOST(req.body, carQuery._id, (req as any).user._id, car.model);
 
     await repo.create(reserve);
 
