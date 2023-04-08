@@ -43,7 +43,15 @@ namespace ReserveController{
   });
 
   export const GET = async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
-    // TODO:
+    let queryOptions: QueryOptions<HydratedDocument<ReserveInterface>> = {"limit": PAGE_SIZE};
+    const queryFilter : FilterQuery<HydratedDocument<ReserveInterface>> = req.params.id ? {"_id" : req.params.id, ...req.query} :  {...req.query}
+
+    const pageIndex = +req.body.pageIndex || 0;
+    queryOptions.skip = pageIndex * PAGE_SIZE;
+
+    let reservations = await repo.find(queryFilter, queryOptions);
+
+    MakeResponse.success(res, 200, `retrieved ${reservations.length} reservation(s) at page ${pageIndex}`, reservations);
   }
 
   export const DELETE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
