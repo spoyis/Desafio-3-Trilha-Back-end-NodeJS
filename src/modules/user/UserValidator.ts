@@ -4,11 +4,11 @@ import addressSchema from "./AddressSchema";
 
 namespace UserValidator{
 
-  const NAME_LOWER_BOUND = 3;
-  const NAME_UPPER_BOUND = 30;
+  export const NAME_LOWER_BOUND = 3;
+  export const NAME_UPPER_BOUND = 30;
 
-  const PASSWORD_LOWER_BOUND = 6;
-  const PASSWORD_UPPER_BOUND = 64;
+  export const PASSWORD_LOWER_BOUND = 6;
+  export const PASSWORD_UPPER_BOUND = 64;
 
   function extractCPFDigits(CPF: string) : Array<number> {
     const digits = CPF.replace(/\D/g, '');
@@ -130,7 +130,7 @@ namespace UserValidator{
       "boolean.required" : "A user must inform if he is qualified to drive."
     }),
 
-    address: addressValidation
+    address: addressValidation.required()
   });
 
   export const validate = async (user : UserInterface) => {
