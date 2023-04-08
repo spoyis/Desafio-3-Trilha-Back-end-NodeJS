@@ -11,7 +11,7 @@ namespace ReserveValidator{
     }),
 
     end_date: Joi.date()
-    .timestamp().min(Joi.ref("start_date"))
+    .min(Joi.ref("start_date"))
     .messages({
 
     }),
