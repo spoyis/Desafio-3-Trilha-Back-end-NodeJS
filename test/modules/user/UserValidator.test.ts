@@ -1,7 +1,7 @@
 import { invalid } from "joi"
-import AddressInterface from "../src/modules/user/AddressInterface"
-import UserInterface from "../src/modules/user/UserInterface"
-import UserValidator from "../src/modules/user/UserValidator"
+import AddressInterface from "../../../src/modules/user/AddressInterface"
+import UserInterface from "../../../src/modules/user/UserInterface"
+import UserValidator from "../../../src/modules/user/UserValidator"
 
 describe('UserValidator test suite', () =>{
 

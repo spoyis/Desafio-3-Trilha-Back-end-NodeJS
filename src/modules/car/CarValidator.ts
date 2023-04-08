@@ -3,10 +3,10 @@ import CarInterface from "./CarInterface";
 
 namespace CarValidator{
 
-  const FABRICATION_LOWER_BOUND = 1950;
-  const FABRICATION_UPPER_BOUND = new Date().getFullYear();
+  export const FABRICATION_LOWER_BOUND = 1950;
+  export const FABRICATION_UPPER_BOUND = new Date().getFullYear();
 
-  const ACCESSORIES_LOWER_BOUND = 1;
+  export const ACCESSORIES_LOWER_BOUND = 1;
 
   const CarValidation = Joi.object({
 
