@@ -23,22 +23,6 @@ namespace ReserveController{
     return value_per_day * Math.ceil((end_date.valueOf() - start_date.valueOf()) / ONE_DAY_MS);
   }
 
-  function datesIntersect(start1: Date, end1: Date, start2: Date, end2: Date) : boolean {
-    return (start1 <= end2 && start2 <= end1);
-  }
-
-  const checkValidationIntersection = async(start : Date, end :Date, car_id : string, carModel : string) =>{
-    const reservations =  await repo.find({id_car : car_id}, NO_OPTIONS);
-
-    let hasIntersection = false;
-    for (const {start_date, end_date} of reservations) {
-      hasIntersection = datesIntersect(start, end, start_date, end_date);
-      if(hasIntersection) break;
-    }
-    if(hasIntersection) throw new AppError(`this ${carModel} already has a booking within the timeframe`, 400);
-  }
-
-
   export const POST =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     const carQuery : FilterQuery<HydratedDocument<CarInterface>> = {_id: req.body.id_car}
     
@@ -56,7 +40,7 @@ namespace ReserveController{
     req.body.id_user = (req as any).user.id ;
 
     const reserve = await ReserveValidator.validatePOST(req.body);
-    await checkValidationIntersection(req.body.start_date, req.body.end_date, carQuery._id, car.model)
+    await ReserveValidator.checkTimeframeIntersection(req.body.start_date, req.body.end_date, carQuery._id, car.model)
     
     // TODO: DISALLOW A USER TO RESERVE MORE THAN ONE CAR
 
