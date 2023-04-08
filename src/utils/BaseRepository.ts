@@ -38,7 +38,10 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
 
   async findOne(filter : FilterQuery<HydratedDocument<T>> , options : QueryOptions<HydratedDocument<T>>, selectFilter? : string)  {
-    
+    if(filter._id)
+      if (!filter._id.match(/^[0-9a-fA-F]{24}$/))
+        throw new AppError("No object found with the given ID" , 404);
+
     if(selectFilter)
       return this._model.findOne(filter, {}, options).select(selectFilter);
     else

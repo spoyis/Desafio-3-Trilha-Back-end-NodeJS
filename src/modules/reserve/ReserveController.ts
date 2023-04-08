@@ -23,7 +23,7 @@ namespace ReserveController{
     const carQuery : FilterQuery<HydratedDocument<CarInterface>> = {_id: req.body.id_car}
     
     const car = await carRepo.findOne(carQuery, NO_OPTIONS);
-    if(!car) return next(new AppError("No car found with given id.", 404));
+    if(!car) return next(new AppError("No object found with given id.", 404));
 
     const ONE_DAY_MS = 1000 * 60 * 60 * 24;
     req.body.final_value = car!.value_per_day * Math.floor((new Date(req.body.end_date).valueOf() - new Date(req.body.start_date).valueOf()) / ONE_DAY_MS);
