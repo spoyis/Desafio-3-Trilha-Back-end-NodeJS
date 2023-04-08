@@ -55,7 +55,10 @@ namespace ReserveController{
   }
 
   export const DELETE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
-    // TODO:
+    let deleteParams: FilterQuery<HydratedDocument<ReserveInterface>>  = {_id : req.params.id};
+    
+    await repo.delete(deleteParams);
+    MakeResponse.success(res, 204, "Reservation successfully deleted");
   })
 
   export const UPDATE =  ErrorController.catchAsync( async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
