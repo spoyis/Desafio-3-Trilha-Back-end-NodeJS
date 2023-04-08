@@ -23,21 +23,41 @@ namespace ReserveController{
     return value_per_day * Math.ceil((end_date.valueOf() - start_date.valueOf()) / ONE_DAY_MS);
   }
 
+  function datesIntersect(start1: Date, end1: Date, start2: Date, end2: Date) : boolean {
+    return (start1 <= end2 && start2 <= end1);
+  }
+
+  const checkValidationIntersection = async(start : Date, end :Date, car_id : string, carModel : string) =>{
+    const reservations =  await repo.find({id_car : car_id}, NO_OPTIONS);
+
+    let hasIntersection = false;
+    for (const {start_date, end_date} of reservations) {
+      hasIntersection = datesIntersect(start, end, start_date, end_date);
+      if(hasIntersection) break;
+    }
+    if(hasIntersection) throw new AppError(`this ${carModel} already has a booking within the timeframe`, 400);
+  }
+
+
   export const POST =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     const carQuery : FilterQuery<HydratedDocument<CarInterface>> = {_id: req.body.id_car}
     
+    if(!(req as any).user.qualified){
+      return next (new AppError("This user is not qualified to drive!", 400));
+    }
+
     const car = await carRepo.findOne(carQuery, NO_OPTIONS);
     if(!car) return next(new AppError("No object found with given id.", 404));
 
-    req.body.final_value = calculateTotalCost(car!.value_per_day, new Date(req.body.start_date), new Date(req.body.end_date));
+    req.body.start_date = new Date(req.body.start_date);
+    req.body.end_date = new Date(req.body.end_date);
 
-    req.body.id_user =  (req as any).user.id ;
-
-    console.log(req.body)
+    req.body.final_value = calculateTotalCost(car!.value_per_day, req.body.start_date, req.body.end_date);
+    req.body.id_user = (req as any).user.id ;
 
     const reserve = await ReserveValidator.validatePOST(req.body);
-
-    // TODO: DISALLOW A CAR TO BE RESERVED MORE THAN ONCE IN A GIVEN TIMESPAN
+    await checkValidationIntersection(req.body.start_date, req.body.end_date, carQuery._id, car.model)
+    
     // TODO: DISALLOW A USER TO RESERVE MORE THAN ONE CAR
 
     await repo.create(reserve);
@@ -77,8 +97,6 @@ namespace ReserveController{
 
       req.body.final_value = calculateTotalCost((reservation as any).id_car.value_per_day, new Date(req.body.start_date), new Date(req.body.end_date));
     }
-
-    console.log(req.body)
     
     await ReserveValidator.validateUPDATE(req.body);
     await repo.update(req.params.id, req.body );
