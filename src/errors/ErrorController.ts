@@ -14,13 +14,12 @@ namespace ErrorController{
       err.statusCode = err.statusCode || 500;
       err.status = err.status || 'fail';
 
-      if(err.statusCode === 500){
+      if (err.code === 11000) err = handleDuplicateFieldsDB(err);
+      else if(err.statusCode === 500 ){
         console.log('ERROR: ')
         console.log(err.stack!)
       }
          
-      if (err.code === 11000) err = handleDuplicateFieldsDB(err);
-
       return res.status(err.statusCode).json({
       status: err.status,
       error: err,
