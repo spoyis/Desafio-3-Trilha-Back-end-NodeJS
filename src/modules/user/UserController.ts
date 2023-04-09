@@ -33,7 +33,7 @@ namespace UserController{
   }
 
   // endpoint middleware functions
-  export const GET = async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
+  export const GET = ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     let queryOptions: QueryOptions<HydratedDocument<UserInterface>> = {"limit": PAGE_SIZE};
     const queryFilter : FilterQuery<HydratedDocument<UserInterface>> = req.params.id ? {"_id" : req.params.id} :  {}
 
@@ -43,7 +43,7 @@ namespace UserController{
     let users = await repo.find(queryFilter, queryOptions, "-password");
 
     MakeResponse.success(res, 200, `retrieved ${users.length} user(s) at page ${pageIndex}`, users);
-  }
+  })
 
   export const signUp =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     const addr = await getAddressByCep(req.body.cep);
