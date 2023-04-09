@@ -7,6 +7,7 @@ import BaseRoutes from  './utils/BaseRoutes';
 
 const app = express();
 
+/* istanbul ignore if */
 if (process.env.NODE_ENV !== "test") {
   const DB = process.env.DATABASE!.replace(
     '<PASSWORD>',
