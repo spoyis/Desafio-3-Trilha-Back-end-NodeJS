@@ -2,7 +2,7 @@ import { invalid } from "joi"
 import AddressInterface from "../../../src/modules/user/AddressInterface"
 import UserInterface from "../../../src/modules/user/UserInterface"
 import UserValidator from "../../../src/modules/user/UserValidator"
-import { validUser, validAddress } from "../objectInstances.test"
+import { validUser, validAddress } from "../objectInstances"
 
 describe('UserValidator test suite', () =>{
   let user: UserInterface;
