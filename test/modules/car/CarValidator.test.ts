@@ -1,24 +1,9 @@
 import { invalid } from "joi"
 import CarInterface from "../../../src/modules/car/CarInterface"
 import CarValidator from "../../../src/modules/car/CarValidator"
+import { validCar } from "../objectInstances.test";
 
 describe('CarValidator test suite', () =>{
-
-  const validCar: CarInterface = {
-    model : "Honda Civic",
-    color: "black",
-    year: 2020,
-    value_per_day : 50,
-    accessories: [
-      {
-        description: "Air coditioner"
-      },
-      {
-        description: "parking camera"
-      }
-    ],
-    number_of_passengers: 4
-  }
 
   let car: CarInterface;
 
