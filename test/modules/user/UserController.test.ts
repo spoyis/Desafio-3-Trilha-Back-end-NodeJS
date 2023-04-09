@@ -1,30 +1,20 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import request from "supertest";
 import { Response } from "supertest";
 import {app} from "../../../src/app";
 import { UserRepository } from "../../../src/modules/user/UserRepository";
 import { validUser } from "../objectInstances";
+import Fakes from "../Fakes";
 
-let mongod: MongoMemoryServer;
-const repo = new UserRepository();
-
-const connectDB  = async () =>{
-  mongod = await MongoMemoryServer.create();
-  const DB = mongod.getUri();
-
-  console.log(DB)
-  mongoose.connect(DB).then(() => console.log('LOCAL DB connection successful!'));
-}
+let DB = new Fakes.Database();
 
 beforeAll(async () => {
-    repo.create(validUser)
-    await connectDB();
+  await DB.setup();
 });
 
 afterAll(async () => {
-  await mongoose.disconnect();
-  await mongod.stop();
+  await DB.close();
 });
 
 describe('UserController test suite', () => {
@@ -33,7 +23,6 @@ describe('UserController test suite', () => {
     it('responds with status 200', async () => 
     {
       const res: Response = await request(app).get('/api/v1/user');
-      console.log(res.body);
       expect(res.statusCode).toEqual(200);
     });
   });
@@ -49,6 +38,16 @@ describe('UserController test suite', () => {
         expect(res.statusCode).toEqual(404);
       });
     })
+    describe('Respond with 200 when', () =>{
+      it('There is a valid id in the params', async () => 
+      {
+        const res: Response = await request(app).get(`/api/v1/user/${DB.user!.id}`);
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toMatchObject({message: 'retrieved 1 user(s) at page 0'});
+      });
+    })
+
   });
 
 
