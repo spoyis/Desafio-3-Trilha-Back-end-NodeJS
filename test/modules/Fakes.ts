@@ -3,7 +3,7 @@ import mongoose, { ObjectId } from "mongoose";
 import { UserRepository } from "../../src/modules/user/UserRepository";
 import { CarRepository } from "../../src/modules/car/CarRepository";
 import { ReserveRepository } from "../../src/modules/reserve/ReserveRepository";
-import { validUser } from "./objectInstances";
+import { DatabaseUserQualified, DatabaseUserNotQualified } from "./objectInstances";
 import AuthController from "../../src/utils/AuthController";
 
 namespace Fakes{
@@ -32,7 +32,7 @@ namespace Fakes{
       const DB = this.mongod.getUri();
 
       mongoose.connect(DB);
-      this.addUser();
+      await this.addUsers();
       return this;
     }
 
@@ -41,9 +41,11 @@ namespace Fakes{
       await this.mongod!.stop();
     }
 
-    private async addUser(){
-      const doc = await userRepo.create(validUser);
+    private async addUsers(){
+      const doc = await userRepo.create(DatabaseUserQualified);
       this.user = new UserData(doc.id, await AuthController.signToken(doc.id));
+    
+      await userRepo.create(DatabaseUserNotQualified);
     }
 
     constructor(){
