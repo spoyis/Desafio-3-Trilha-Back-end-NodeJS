@@ -1,6 +1,8 @@
 import AddressInterface from "../../src/modules/user/AddressInterface"
 import UserInterface from "../../src/modules/user/UserInterface"
 import CarInterface from "../../src/modules/car/CarInterface"
+import ReserveInterface from "../../src/modules/reserve/ReserveInterface"
+import { ObjectId } from "mongoose"
 
 export const validAddress : AddressInterface = {
   cep: 79006480,
@@ -68,4 +70,40 @@ export const DatabaseUserNotQualified : UserInterface = {
   password: 'minoxidil',
   address: {...validAddress},
   qualified : false
+}
+
+export const DatabaseCar : CarInterface = {
+  model : "VW Gol",
+  color: "white",
+  year: 2023,
+  value_per_day : 75,
+  accessories: [
+    {
+      description: "Air coditioner"
+    },
+    {
+      description: "parking camera"
+    }
+  ],
+  number_of_passengers: 4
+
+}
+
+export const validDBReservation = (userId: ObjectId, car : any) => {
+  return {
+    start_date : "2023-05-25",
+    end_date: "2023-05-30",
+    id_car: car.id,
+    id_user: userId,
+    final_value: car.value_per_day * 5
+  }
+}
+
+export const validReservationRequest = (userId: ObjectId, carId : ObjectId) => {
+  return {
+    start_date : "2023-04-25",
+    end_date: "2023-04-30",
+    id_car: carId,
+    id_user: userId,
+  }
 }

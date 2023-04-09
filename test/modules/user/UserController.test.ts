@@ -1,8 +1,9 @@
 import request from "supertest";
 import { Response } from "supertest";
 import {app} from "../../../src/app";
-import { validUserRequest, DatabaseUser } from "../objectInstances";
+import { validUserRequest, DatabaseUser, validUser } from "../objectInstances";
 import Fakes from "../Fakes";
+import AuthController from "../../../src/utils/AuthController";
 
 let DB = new Fakes.Database();
 
@@ -140,5 +141,39 @@ describe('{{UserController}} test suite', () => {
   })
 
   
+  describe('{DELETE} /api/v1/user/', () => {
 
+    describe('> Responds with 204 when', () =>{
+      it('The user is logged in with a valid JWT accesses the route', async () => {
+        const user = await DB.addUser(validUser);
+        const token = await AuthController.signToken(user.id)
+
+        const res: Response = await request(app).delete('/api/v1/user/').set('Authorization', `Bearer ${token}`)
+        expect(res.statusCode).toEqual(204);
+      });
+    })
+
+    describe('> Responds with 500 when', () =>{
+      it('The user jwt is malformed', async () => {
+        const res: Response = await request(app).delete('/api/v1/user/').set('Authorization', 'Bearer 123')
+        expect(res.statusCode).toEqual(500);
+      });
+    })
+
+    describe('> Responds with 403 when', () =>{
+      it('the given jwt doesnt match an existing users', async () => {
+        const user = await DB.addUser(validUser);
+        const token = await AuthController.signToken(user.id)
+        
+        const res1: Response = await request(app).delete('/api/v1/user/').set('Authorization', `Bearer ${token}`)
+        const res2: Response = await request(app).delete('/api/v1/user/').set('Authorization', `Bearer ${token}`)
+        expect(res2.statusCode).toEqual(403);
+      });
+      it('no jwt was given', async () => {
+        const res: Response = await request(app).delete('/api/v1/user/')
+        expect(res.statusCode).toEqual(403);
+      });
+    })
+    
+  });
 });
