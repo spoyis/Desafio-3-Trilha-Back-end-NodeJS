@@ -35,7 +35,9 @@ namespace UserController{
   // endpoint middleware functions
   export const GET = ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     let queryOptions: QueryOptions<HydratedDocument<UserInterface>> = {"limit": PAGE_SIZE};
-    const queryFilter : FilterQuery<HydratedDocument<UserInterface>> = req.params.id ? {"_id" : req.params.id} :  {}
+    const queryFilter : FilterQuery<HydratedDocument<UserInterface>> = req.params.id ?  {"_id" : req.params.id, ...req.query}  :  {...req.query}
+ 
+    if(req.query.password) return next(new AppError("you can't query for passwords.", 400));
 
     const pageIndex = +req.body.pageIndex || 0;
     queryOptions.skip = pageIndex * PAGE_SIZE;
