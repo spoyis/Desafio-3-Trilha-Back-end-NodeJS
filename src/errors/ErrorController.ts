@@ -15,9 +15,9 @@ namespace ErrorController{
       err.status = err.status || 'fail';
 
       if (err.code === 11000) err = handleDuplicateFieldsDB(err);
-      else if(err.statusCode === 500 ){
+      else if(err.statusCode === 500 && err.name !== 'JsonWebTokenError'){
         console.log('ERROR: ')
-        console.log(err.stack!)
+        console.log(err)
       }
          
       return res.status(err.statusCode).json({
