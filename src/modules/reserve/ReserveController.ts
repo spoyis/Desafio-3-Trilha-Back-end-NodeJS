@@ -46,7 +46,7 @@ namespace ReserveController{
     MakeResponse.success(res, 201, "Reservation succesfully registered." , reserve);
   });
 
-  export const GET = async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
+  export const GET = ErrorController.catchAsync( async (req: Request, res: Response, next : NextFunction): Promise<any> =>{
     let queryOptions: QueryOptions<HydratedDocument<ReserveInterface>> = {"limit": PAGE_SIZE};
     const queryFilter : FilterQuery<HydratedDocument<ReserveInterface>> = req.params.id ? {"_id" : req.params.id, ...req.query} :  {...req.query}
 
@@ -56,7 +56,7 @@ namespace ReserveController{
     let reservations = await repo.find(queryFilter, queryOptions);
 
     MakeResponse.success(res, 200, `retrieved ${reservations.length} reservation(s) at page ${pageIndex}`, reservations);
-  }
+  })
 
   export const DELETE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     let deleteParams: FilterQuery<HydratedDocument<ReserveInterface>>  = {_id : req.params.id};

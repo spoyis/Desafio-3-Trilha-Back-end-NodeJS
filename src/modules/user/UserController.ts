@@ -61,7 +61,7 @@ namespace UserController{
     MakeResponse.success(res, 201, "User successfully created" , {"token": token});
   });
 
-  export const signIn = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
+  export const signIn = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     const { email, password } = req.body;
 
     if(!email || !password)
@@ -77,14 +77,14 @@ namespace UserController{
     const token = await AuthController.signToken(user._id);
 
     MakeResponse.success(res, 200, "User successfully logged in", {"token" : token});
-  }
+  })
 
-  export const DELETE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
+  export const DELETE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     let deleteParams: FilterQuery<HydratedDocument<UserInterface>>  = {_id : (req as any).user.id};
     
     await repo.delete(deleteParams);
     MakeResponse.success(res, 204, "User successfully deleted");
-  }
+  });
 
   export const UPDATE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     // TODO:

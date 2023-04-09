@@ -54,7 +54,7 @@ namespace CarController{
     MakeResponse.success(res, 200, "Car succesfully updated" , car);
   })
 
-  export const PATCH = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
+  export const PATCH = ErrorController.catchAsync( async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     const queryFilter : FilterQuery<HydratedDocument<CarInterface>> = {"_id" : req.params.id};
 
     const {description} = req.body;
@@ -76,7 +76,7 @@ namespace CarController{
     await repo.update(req.params.id, {accessories} as any);
 
     MakeResponse.success(res, 200, "Car accessories succesfully updated" , accessories);
-  }
+  })
 }
 
 export default CarController;
