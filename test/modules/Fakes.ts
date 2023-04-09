@@ -48,6 +48,10 @@ namespace Fakes{
       await userRepo.create(DatabaseUserNotQualified);
     }
 
+    public async deleteUser(usercpf : ObjectId){
+      await userRepo.delete({cpf : usercpf});
+    }
+
     constructor(){
       // NOTHING
     }

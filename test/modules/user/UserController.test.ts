@@ -14,14 +14,14 @@ afterAll(async () => {
   await DB.close();
 });
 
-describe('UserController test suite', () => {
+describe('{{UserController}} test suite', () => {
 
-  describe('GET /api/v1/user', () => {
-    describe('Responds with 200 when', () =>{
+  describe('{GET} /api/v1/user', () => {
+    describe('> Responds with 200 when', () =>{
       it('an empty request is sent', async () => 
       {
         const res: Response = await request(app).get('/api/v1/user');
-        console.log(res.body)
+        
         expect(res.statusCode).toEqual(200);
         expect(res.body).toMatchObject({message: 'retrieved 2 user(s) at page 0'});
       });
@@ -41,7 +41,7 @@ describe('UserController test suite', () => {
       })
     })
 
-    describe('Respond with 400 when', () =>{
+    describe('> Responds with 400 when', () =>{
     
       it('Some "palmeirense safado" tries querying for passwords', async ()=>{
         const query = {password: 'palmeirasnaotemmundial'};
@@ -51,18 +51,10 @@ describe('UserController test suite', () => {
     })
   });
 
-  describe('GET /api/v1/user/:id', () => {
 
-    describe('Responds with 400 when', () =>{
-      it('There is a bad id in the params', async () => 
-      {
-        const badId = 123;
-        const res: Response = await request(app).get(`/api/v1/user/${badId}`);
+  describe('{GET} /api/v1/user/:id', () => {
 
-        expect(res.statusCode).toEqual(404);
-      });
-    })
-    describe('Responds with 200 when', () =>{
+    describe('> Responds with 200 when', () =>{
       it('There is a valid id in the params', async () => 
       {
         const res: Response = await request(app).get(`/api/v1/user/${DB.user!.id}`);
@@ -72,9 +64,81 @@ describe('UserController test suite', () => {
       });
     })
 
-    
+    describe('> Responds with 400 when', () =>{
+      it('There is a bad id in the params', async () => 
+      {
+        const badId = 123;
+        const res: Response = await request(app).get(`/api/v1/user/${badId}`);
 
+        expect(res.statusCode).toEqual(404);
+      });
+    })
+    
   });
 
+
+  describe('{POST} /api/v1/user/', () => {
+    let createdUser = false;
+
+    describe('> Responds with 201 when', () =>{
+      it('The request body has valid parameters', async () => {
+        const res: Response = await request(app).post('/api/v1/user/').send(validUserRequest)
+        expect(res.statusCode).toEqual(201);
+        createdUser = true;
+      });
+    })
+
+    describe('> Responds with 400 when', () =>{
+      it('tries to sign up with an email/cpf that already exists within the database', async () => {
+        const request1 = {...validUserRequest};
+        const request2 = {...validUserRequest};
+
+        request1.email = DatabaseUser.email
+        request2.cpf = DatabaseUser.cpf;
+
+        const res1: Response = await request(app).post('/api/v1/user/').send(request1)
+        const res2: Response = await request(app).post('/api/v1/user/').send(request2)
+        
+        expect(res1.statusCode).toEqual(400);
+        expect(res2.statusCode).toEqual(400);
+      });  
+    })
+
+    afterEach(async()=>{
+      if(createdUser)
+        await DB.deleteUser(validUserRequest.cpf)
+    })
+  })
+
+
+  describe('{POST} /api/v1/user/authenticate', () => {
+  
+    describe('> Responds with 201 when', () =>{
+      it('The request body has valid parameters for a real user', async () => {
+        const res: Response = await request(app).post('/api/v1/user/authenticate').send({email: DatabaseUser.email, password: DatabaseUser.password})
+        expect(res.statusCode).toEqual(200);
+      });
+    })
+    describe('> Responds with 400 when', () =>{
+      it('The request body is missing one of the login parameters', async () => {
+        const res: Response = await request(app).post('/api/v1/user/authenticate').send({email: DatabaseUser.email})
+        expect(res.statusCode).toEqual(400);
+      });
+    })
+    describe('> Responds with 404 when', () =>{
+      it('The request body has valid parameters, but no user matches the email', async () => {
+        const res: Response = await request(app).post('/api/v1/user/authenticate').send({email: 'ninguem@corinthians.com', password: '123'})
+        expect(res.statusCode).toEqual(404);
+      });
+    })
+    describe('> Responds with 401 when', () =>{
+      it('The request body has valid parameters for a real user, but the password is wrong', async () => {
+        const res: Response = await request(app).post('/api/v1/user/authenticate').send({email: DatabaseUser.email, password: '123'})
+        expect(res.statusCode).toEqual(401);
+      });
+    })
+  })
+
+  
 
 });
