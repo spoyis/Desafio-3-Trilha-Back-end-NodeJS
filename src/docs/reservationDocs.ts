@@ -210,7 +210,7 @@
 
 /**
  * @swagger
- * /reservations/{id}:
+ * api/v1/reserve/{id}:
  *   put:
  *     summary: Update a reservation by ID
  *     tags: 
@@ -247,7 +247,7 @@
 
 /**
  * @swagger
- * /reservations/{id}:
+ * api/v1/reserve/{id}:
  *   delete:
  *     summary: Delete a reservation
  *     tags: [Reservations]
