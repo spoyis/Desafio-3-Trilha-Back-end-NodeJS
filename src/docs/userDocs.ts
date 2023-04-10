@@ -342,3 +342,57 @@
  *       '500':
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /api/v1/user:
+ *   put:
+ *     summary: Updates an existing user.
+ *     description: Updates the information of the user which is logged in, including name, CPF, birth date, email, password, CEP, and qualification status. The request must be authenticated with a valid JWT token. If a new password is provided, it will be hashed before being saved. If a new CEP is provided, the user's address will be updated with data obtained from an external API.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         schema:
+ *     requestBody:
+ *       description: The fields to be updated.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               cpf:
+ *                 type: string
+ *               birthDate:
+ *                 type: string
+ *                 format: date
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *               cep:
+ *                 type: string
+ *                 pattern: '^[0-9]{5}-?[0-9]{3}$'
+ *               qualified:
+ *                 type: boolean
+ *     responses:
+ *       '200':
+ *         description: User updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User successfully updated
+ *       '400':
+ *         description: bad request
+ */
