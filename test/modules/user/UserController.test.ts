@@ -176,4 +176,29 @@ describe('{{UserController}} test suite', () => {
     })
     
   });
+
+  describe('{PUT} /api/v1/user/:id', () => {
+    describe('> Responds with 200 when', () =>{
+      describe('any of the valid fields are updated', ()=>{
+        it.each([
+          {input:'name', value: 'Renato Augusto'},
+          {input:'cpf', value: '066.691.930-50'},
+          {input:'email', value: 'carregatime@corinthians.com'},
+          {input:'password', value: 'deusnato'},
+          {input:'qualified', value: true},
+          {input:'cep', value: '31842688'}
+        ])('- $input is updated',async ({input, value})=>{
+          const user = await DB.addUser(validUser);
+          const token = await AuthController.signToken(user.id)
+
+          const data = {[input]: value}
+          const res: Response = await request(app).put('/api/v1/user/').send(data).set('Authorization', `Bearer ${token}`);
+          if(res.statusCode === 400)
+            console.log(res)
+          
+          await DB.deleteUser(data.cpf || validUser.cpf)
+        })
+      })
+    });
+  });
 });
