@@ -60,8 +60,7 @@ namespace CarController{
     const queryFilter : FilterQuery<HydratedDocument<CarInterface>> = {"_id" : req.params.id};
 
     const {description} = req.body;
-    console.log(description)
-    console.log(req.body)
+
     if(typeof description !== "string" ) 
       next(new AppError("please provide a valid description string", 400));
 
