@@ -1,7 +1,7 @@
-import AddressInterface from "../../src/modules/user/AddressInterface"
-import UserInterface from "../../src/modules/user/UserInterface"
-import CarInterface from "../../src/modules/car/CarInterface"
-import ReserveInterface from "../../src/modules/reserve/ReserveInterface"
+import AddressInterface from "../src/modules/user/AddressInterface"
+import UserInterface from "../src/modules/user/UserInterface"
+import CarInterface from "../src/modules/car/CarInterface"
+import ReserveInterface from "../src/modules/reserve/ReserveInterface"
 import { ObjectId } from "mongoose"
 
 export const validAddress : AddressInterface = {

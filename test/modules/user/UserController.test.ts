@@ -1,8 +1,8 @@
 import request from "supertest";
 import { Response } from "supertest";
 import {app} from "../../../src/app";
-import { validUserRequest, DatabaseUser, validUser } from "../objectInstances";
-import Fakes from "../Fakes";
+import { validUserRequest, DatabaseUser, validUser } from "../../objectInstances";
+import Fakes from "../../Fakes";
 import AuthController from "../../../src/utils/AuthController";
 
 let DB = new Fakes.Database();

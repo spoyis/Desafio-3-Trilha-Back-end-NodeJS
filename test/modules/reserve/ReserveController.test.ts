@@ -1,8 +1,8 @@
 import ReserveInterface from "../../../src/modules/reserve/ReserveInterface"
 import ReserveValidator from "../../../src/modules/reserve/ReserveValidator"
-import { validReservationRequest, validUser, validFakeReservation } from "../objectInstances";
+import { validReservationRequest, validUser, validFakeReservation } from "../../objectInstances";
 import AuthController from "../../../src/utils/AuthController";
-import Fakes from "../Fakes";
+import Fakes from "../../Fakes";
 import { Response } from "supertest";
 import request from "supertest";
 import {app} from "../../../src/app";

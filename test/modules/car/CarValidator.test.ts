@@ -1,7 +1,7 @@
 import { invalid } from "joi"
 import CarInterface from "../../../src/modules/car/CarInterface"
 import CarValidator from "../../../src/modules/car/CarValidator"
-import { validCar } from "../objectInstances";
+import { validCar } from "../../objectInstances";
 
 describe('CarValidator test suite', () =>{
 

@@ -1,13 +1,13 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose, { HydratedDocument, ObjectId } from "mongoose";
-import { UserRepository } from "../../src/modules/user/UserRepository";
-import { CarRepository } from "../../src/modules/car/CarRepository";
-import { ReserveRepository } from "../../src/modules/reserve/ReserveRepository";
+import { UserRepository } from "../src/modules/user/UserRepository";
+import { CarRepository } from "../src/modules/car/CarRepository";
+import { ReserveRepository } from "../src/modules/reserve/ReserveRepository";
 import { DatabaseUserQualified, DatabaseUserNotQualified, DatabaseCar, validDBReservation, validFakeReservation } from "./objectInstances";
-import AuthController from "../../src/utils/AuthController";
-import UserInterface from "../../src/modules/user/UserInterface";
-import CarInterface from "../../src/modules/car/CarInterface";
-import ReserveInterface from "../../src/modules/reserve/ReserveInterface";
+import AuthController from "../src/utils/AuthController";
+import UserInterface from "../src/modules/user/UserInterface";
+import CarInterface from "../src/modules/car/CarInterface";
+import ReserveInterface from "../src/modules/reserve/ReserveInterface";
 
 namespace Fakes{
 
