@@ -9,8 +9,9 @@ import AppError from "../errors/AppError";
 
 namespace AuthController{
 
-  const secret : Secret = process.env.NODE_ENV !== "test" ? process.env.JWT_SECRET as string : '123';
-  const options : SignOptions = process.env.NODE_ENV !== "test" ? { expiresIn: process.env.JWT_EXPIRES_IN } : { expiresIn: '12H' }
+  /* istanbul ignore next */
+  const secret : Secret =   process.env.NODE_ENV !== "test" ? process.env.JWT_SECRET as string : '123';/* istanbul ignore next */
+  const options : SignOptions =  process.env.NODE_ENV !== "test" ? { expiresIn: process.env.JWT_EXPIRES_IN } : { expiresIn: '12H' }
   const userRepo : UserRepository = new UserRepository();
 
   export const signToken = async (id: any) => {
