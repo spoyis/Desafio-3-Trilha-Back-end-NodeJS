@@ -3,7 +3,7 @@ import mongoose, { HydratedDocument, ObjectId } from "mongoose";
 import { UserRepository } from "../../src/modules/user/UserRepository";
 import { CarRepository } from "../../src/modules/car/CarRepository";
 import { ReserveRepository } from "../../src/modules/reserve/ReserveRepository";
-import { DatabaseUserQualified, DatabaseUserNotQualified, DatabaseCar, validDBReservation } from "./objectInstances";
+import { DatabaseUserQualified, DatabaseUserNotQualified, DatabaseCar, validDBReservation, validFakeReservation } from "./objectInstances";
 import AuthController from "../../src/utils/AuthController";
 import UserInterface from "../../src/modules/user/UserInterface";
 import CarInterface from "../../src/modules/car/CarInterface";
@@ -29,6 +29,7 @@ namespace Fakes{
 
     private mongod: MongoMemoryServer | undefined;
     public user : UserData | undefined;
+    public userNotQualified : UserData | undefined;
     public car : HydratedDocument<CarInterface> | undefined;
     public reservation : HydratedDocument<ReserveInterface> | undefined;
 
@@ -38,8 +39,8 @@ namespace Fakes{
 
       mongoose.connect(DB);
       await this.addUsers();
-      await this.addCar();
-      await this.addReservation();
+      await this.addDBCar();
+      await this.addDBReservation();
       return this;
     }
 
@@ -52,24 +53,45 @@ namespace Fakes{
       const doc = await userRepo.create(DatabaseUserQualified);
       const token = await AuthController.signToken(doc._id);
       this.user = new UserData(doc.id, token);
-      console.log(this.user)
 
-      await userRepo.create(DatabaseUserNotQualified);
+      const doc2 = await userRepo.create(DatabaseUserNotQualified);
+      const token2 = await AuthController.signToken(doc2._id);
+      this.userNotQualified = new UserData(doc2.id, token2);
     }
 
-    private async addCar(){
+    private async addDBCar(){
       const car = await carRepo.create(DatabaseCar);
       this.car = car;
     }
 
-    private async addReservation(){
-      console.log('ADDDING RESERVATION\n' + this.car)
-      const dbReservation = validDBReservation(this.user!.id, this.car);
-      const reservation = await reserveRepo.create(dbReservation as any);
+    public async addCar(){
+      const car = await carRepo.create(DatabaseCar);
+      return car;
     }
 
-    public async deleteUser(usercpf : ObjectId){
+    private async addDBReservation(){
+      const dbReservation = validDBReservation(this.user!.id, this.car);
+      const reservation = await reserveRepo.create(dbReservation as any);
+      this.reservation = reservation;
+    }
+
+    public async addReservation(){
+      let dbReservation = validFakeReservation(this.user!.id, this.car);
+      const reservation = await reserveRepo.create(dbReservation as any);
+
+      return reservation;
+    }
+
+    public async deleteCar(carId : ObjectId){
+      await carRepo.delete({_id : carId});
+    }
+
+    public async deleteUser(usercpf : any){
       await userRepo.delete({cpf : usercpf});
+    }
+
+    public async deleteReservation(start_date : any){
+      await reserveRepo.delete({start_date});
     }
 
     public async addUser(user: UserInterface){

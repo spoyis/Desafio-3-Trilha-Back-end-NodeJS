@@ -99,6 +99,16 @@ export const validDBReservation = (userId: ObjectId, car : any) => {
   }
 }
 
+export const validFakeReservation = (userId: ObjectId, car : any) => {
+  return {
+    start_date: "2023-03-25",
+    end_date: "2023-03-30",
+    id_car: car.id,
+    id_user: userId,
+    final_value: car.value_per_day * 5
+  }
+}
+
 export const validReservationRequest = (userId: ObjectId, carId : ObjectId) => {
   return {
     start_date : "2023-04-25",
