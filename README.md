@@ -82,11 +82,11 @@ The API supports pagination for search results. By default, 5 results are return
 
 [Swagger documentation (must be running the server locally)](http://localhost:8000/api-docs/)
 
-[Swagger documentation (railway deployment)](desafio-3-trilha-back-end-nodejs-production.up.railway.app/api-docs/)
+[Swagger documentation (railway deployment)](http://desafio-3-trilha-back-end-nodejs-production.up.railway.app/api-docs/)
 
 ## Deploy domain
 
-desafio-3-trilha-back-end-nodejs-production.up.railway.app
+http://desafio-3-trilha-back-end-nodejs-production.up.railway.app
 
 ## Dependencies
 
