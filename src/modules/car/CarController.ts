@@ -15,7 +15,7 @@ namespace CarController{
   const NO_FILTER = {};
   const NO_OPTIONS = {};
 
-  export const GET = async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
+  export const GET = ErrorController.catchAsync(async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     let queryOptions: QueryOptions<HydratedDocument<CarInterface>> = {"limit": PAGE_SIZE};
     const queryFilter : FilterQuery<HydratedDocument<CarInterface>> = req.params.id ? {"_id" : req.params.id, ...req.query} :  { ...req.query}
 
@@ -28,7 +28,7 @@ namespace CarController{
     let cars = await repo.find(queryFilter, queryOptions);
 
     MakeResponse.success(res, 200, `retrieved ${cars.length} car(s) at page ${pageIndex}`, cars);
-  }
+  });
 
   export const POST =  ErrorController.catchAsync( async(req: Request, res: Response, next : NextFunction): Promise<any> =>{
     const car = await CarValidator.validatePOST(req.body);
@@ -41,7 +41,9 @@ namespace CarController{
   export const DELETE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     let deleteParams: FilterQuery<HydratedDocument<CarInterface>>  = {_id : req.params.id};
     
-    await repo.delete(deleteParams);
+    const result = await repo.delete(deleteParams);
+    if(result.deletedCount === 0) return next(new AppError("No object found with given id.", 404));
+
     MakeResponse.success(res, 204, "Car successfully deleted");
   })
 
@@ -49,7 +51,7 @@ namespace CarController{
     const car = await CarValidator.validateUPDATE(req.body);
 
     const update = await repo.update(req.params.id, car);
-    if(update.matchedCount === 0) next(new AppError("No object found with the given ID" , 404))
+    if(update.matchedCount === 0 || update.acknowledged === false) next(new AppError("No object found with the given ID" , 404))
 
     MakeResponse.success(res, 200, "Car succesfully updated" , car);
   })
@@ -58,7 +60,8 @@ namespace CarController{
     const queryFilter : FilterQuery<HydratedDocument<CarInterface>> = {"_id" : req.params.id};
 
     const {description} = req.body;
-
+    console.log(description)
+    console.log(req.body)
     if(typeof description !== "string" ) 
       next(new AppError("please provide a valid description string", 400));
 
