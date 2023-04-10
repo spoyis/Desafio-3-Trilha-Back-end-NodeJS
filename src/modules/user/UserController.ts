@@ -9,6 +9,7 @@ import axios, { AxiosResponse } from 'axios';
 import AppError from '../../errors/AppError';
 import AddressInterface from './AddressInterface';
 import { HydratedDocument, FilterQuery, QueryOptions } from 'mongoose';
+import bcrypt from 'bcryptjs'
 
 const repo = new UserRepository();
 namespace UserController{
@@ -86,9 +87,35 @@ namespace UserController{
     MakeResponse.success(res, 204, "User successfully deleted");
   });
 
-  export const UPDATE = async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
-    // TODO:
-  }
-}
+  export const UPDATE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
+    let updateId = (req as any).user.id;
+    let {name, cpf, birthDate, email, password, cep, qualified} = req.body;
+
+    if(password) 
+      password = await bcrypt.hash(password, 12);
+
+    let address : any;
+    if(cep)
+      address = await getAddressByCep(cep)
+
+    const { cep: cepnum, patio, complement, neighborhood, locality, uf } = (req as any).user.address;
+    const oldAddr :AddressInterface = {cep: cepnum, patio, complement, neighborhood, locality, uf};
+
+    const updatedUser : UserInterface = {
+      name: name || (req as any).user.name,
+      cpf: cpf || (req as any).user.cpf,
+      birthDate: birthDate || (req as any).user.birthDate,
+      email: email || (req as any).user.email,
+      password: password || (req as any).user.password,
+      qualified: qualified || (req as any).user.qualified,
+      address: address || oldAddr
+    } 
+
+    await UserValidator.validate(updatedUser);
+    await repo.update(updateId, updatedUser);
+
+    MakeResponse.success(res, 200, "User successfully updated");
+  });
+};
 
 export default UserController;

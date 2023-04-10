@@ -50,8 +50,13 @@ namespace ReserveValidator{
     return reservation;
   }
 
-  export const validateUPDATE = async (reserve : ReserveInterface) => {
-    return await ReserveValidation.validateAsync(reserve);
+  export const validateUPDATE = async (reserve : ReserveInterface, car_id : ObjectId, user_id : ObjectId, carModel : string) => {
+    const update = await ReserveValidation.validateAsync(reserve);
+
+    await checkTimeframeIntersection(reserve.start_date, reserve.end_date, {id_car : car_id}, carModel);
+    await checkTimeframeIntersection(reserve.start_date, reserve.end_date, {id_user : user_id}, 'user');
+
+    return update;
   }
 
   function datesIntersect(start1: Date, end1: Date, start2: Date, end2: Date) : boolean {

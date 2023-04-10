@@ -81,9 +81,8 @@ namespace ReserveController{
       req.body.final_value = calculateTotalCost((reservation as any).id_car.value_per_day, new Date(req.body.start_date), new Date(req.body.end_date));
     }
     
-    await ReserveValidator.validateUPDATE(req.body);
+    await ReserveValidator.validateUPDATE(req.body, req.body.id_car || reservation.id_car, req.body.id_user || reservation.id_user, 'car');
     await repo.update(req.params.id, req.body );
-    // TODO: DISALLOW UPDATES IF THE GIVEN CAR ALREADY HAS A RESERVATION BOOKED WHICH INTERSECTS THE NEW TIMEFRAME
 
     MakeResponse.success(res, 200, "Reservation successfully updated");
   });
