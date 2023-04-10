@@ -66,7 +66,7 @@ namespace ReserveValidator{
       hasIntersection = datesIntersect(start, end, start_date, end_date);
       if(hasIntersection) break;
     }
-    if(hasIntersection) throw new AppError(`this ${description} already has a booking within the timeframe`, 400);
+    if(hasIntersection) throw new AppError(`this ${description} already has a booking within the timeframe`, 409);
   }
 
 }

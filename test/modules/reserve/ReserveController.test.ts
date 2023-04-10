@@ -84,14 +84,6 @@ describe('{{ReserveController}} test suite', () =>{
         
         expect(res.statusCode).toEqual(400);
       })
-
-      it('a valid request is sent, but the car already has a reservation within the timeframe', async ()=>{ 
-        reservation.start_date = DB.reservation!.start_date;
-        reservation.end_date = DB.reservation!.end_date;
-        const res: Response = await request(app).post('/api/v1/reserve').send(reservation).set('Authorization', `Bearer ${DB.user!.jwt}`);
-        
-        expect(res.statusCode).toEqual(400);
-      })
       it('the start date is after the end date', async ()=>{
         const buffer = reservation.start_date;
         reservation.start_date = reservation.end_date;
@@ -112,9 +104,15 @@ describe('{{ReserveController}} test suite', () =>{
         expect(res.statusCode).toEqual(404);
       });
     });
+    describe('> Responds with 409 when', () =>{
+      it('a valid request is sent, but the car already has a reservation within the timeframe', async ()=>{ 
+        reservation.start_date = DB.reservation!.start_date;
+        reservation.end_date = DB.reservation!.end_date;
+        const res: Response = await request(app).post('/api/v1/reserve').send(reservation).set('Authorization', `Bearer ${DB.user!.jwt}`);
+        
+        expect(res.statusCode).toEqual(409);
+      })
   });
-
-  describe('{GET} /api/v1/reserve', () => {
     describe('> Responds with 200 when', () =>{
       it('a valid request is sent', async ()=>{
         const res: Response = await request(app).get('/api/v1/reserve/').set('Authorization', `Bearer ${DB.user!.jwt}`);
