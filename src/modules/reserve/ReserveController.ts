@@ -61,7 +61,9 @@ namespace ReserveController{
   export const DELETE = ErrorController.catchAsync(async (req: Request, res: Response, next : NextFunction) : Promise<any> =>{
     let deleteParams: FilterQuery<HydratedDocument<ReserveInterface>>  = {_id : req.params.id};
     
-    await repo.delete(deleteParams);
+    const result = await repo.delete(deleteParams);
+    if(result.deletedCount === 0) return next(new AppError("No object found with given id.", 404));
+    
     MakeResponse.success(res, 204, "Reservation successfully deleted");
   })
 
